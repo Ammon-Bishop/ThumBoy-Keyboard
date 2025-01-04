@@ -1,1 +1,1 @@
-I lost the left ergogen config.yaml file. don't know how
+I made a video about the process that you can watch here:
