@@ -1,0 +1,169 @@
+units:
+  cxy: 18
+  cxy2: 9
+points:
+  zones:
+    matrix:
+      anchor.shift: [135, -170]
+      rows:
+        bottom:
+          row_net: P111
+        home:
+          row_net: P113
+        top:
+          row_net: P006
+      columns:
+        thumb-outer:
+          rows:
+            bottom:
+              shift: [-20, -62]
+              rotate: 20
+            home.skip: true
+            top.skip: true
+          key:
+            stagger: 47
+            column_net: P010
+        thumb:
+          rows:
+            bottom:
+              shift: [-15, -55]
+              rotate: 12
+            home:
+              shift: [2, 2]
+              rotate: -10
+            top.skip: true
+          key.column_net: P104
+        thumb-inner:
+          rows:
+            bottom:
+              shift: [-9, -51]
+              rotate: 5
+            home:
+              skip: true
+            top.skip: true
+          key.column_net: P100
+        
+        inner:
+          key:
+            splay: 5
+            stagger: 0
+            column_net: P115
+          rows:
+            bottom:
+              shift: [-26, -8]
+              rotate: 5
+            home:
+              rotate: -5
+              shift: [1, 1]
+            top:
+              rotate: -5
+              shift: [1, 1]
+        four:
+          key:
+            splay: 0
+            stagger: 2
+            column_net: P020
+          rows:
+            bottom:
+              rotate: 
+              shift: [-25, -9]
+        three:
+          rows:
+            bottom:
+              splay: -5
+              stagger: -13
+              shift: [-17, 4]
+          key.column_net: P017
+        two:
+          rows:
+            bottom:
+              splay: 0
+              shift: [-10, 14]
+              stagger: -20
+          key.column_net: P022
+        one:
+          key:
+            splay: -20
+            column_net: P024
+          rows:
+            bottom:
+              rotate: -5
+              shift: [-6, -7]
+            home:
+              rotate: 5
+              shift: [-1, 1.5]
+            top.skip: true
+          key.stagger: 0
+
+pcbs:
+  right_circuit:
+    template: kicad8
+    footprints:
+      keyswitches:
+        what: choc
+        where: true
+        params:
+          keycaps: true
+          hotswap: true
+          from: "{{colrow}}"
+          to: "{{column_net}}"
+      nice_nano:
+        what: nice_nano
+        where:
+          ref: matrix_thumb_home
+          shift: [-6, 25]
+          rotate: -90
+        params:
+          orientation: down
+      Mounting_Hole:
+        what: mounting_hole_npth
+        where:
+          ref: matrix_one_home
+          shift: [cxy/2, 0]
+      JST_PH:
+        what: jstph
+        params:
+            pos: pos
+            neg: GND
+        where:
+            ref: matrix_inner_bottom
+            shift: [-7, -16]
+            rotate: -99
+      Power_Switch:
+        what: slider
+        params:
+            from: pos
+            to: RAW
+        where:
+            ref: matrix_inner_home
+            shift: [-19, -1]
+            rotate: -3
+      Diode:
+        what: diode
+        where: true
+        params:
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [0, -4]
+
+#IMPORTANT: THIS CONFIG IS NOT PERFECT (geometry-wise)! THE TWO CONFIGS MAY NOT CREATE PERFECT MIRRORED PCBS! In addition, the power switch and battery connector were moved in kicad after the generation of the pcb and the edge cuts were drawn in LibreCad 
+
+outlines:
+  right_outline:
+    - where: true
+      what: rectangle
+      size: [cxy+9, cxy+9]
+  right_keyswitches:
+    - where: true
+      what: rectangle
+      size: [14, 14]
+  right_cutout:
+    - name: right_outline
+    - operation: subtract
+      name: right_keyswitches
+
+cases:
+  right_plate:
+    - name: right_cutout
+      extrude: 1.2
